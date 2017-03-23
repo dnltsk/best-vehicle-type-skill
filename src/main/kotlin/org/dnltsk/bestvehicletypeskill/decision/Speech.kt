@@ -4,13 +4,16 @@ import com.amazon.speech.speechlet.SpeechletResponse
 import com.amazon.speech.ui.PlainTextOutputSpeech
 import com.amazon.speech.ui.Reprompt
 import com.amazon.speech.ui.SimpleCard
-import net.aksingh.owmjapis.HourlyForecast
+import com.google.inject.Singleton
 import org.dnltsk.bestvehicletypeskill.model.Decision
-import org.dnltsk.bestvehicletypeskill.model.RainType
 import org.dnltsk.bestvehicletypeskill.model.RainType.*
 import org.dnltsk.bestvehicletypeskill.model.VehicleType
+import org.slf4j.LoggerFactory
 
+@Singleton
 class Speech(){
+
+    private val LOG = LoggerFactory.getLogger(this::class.java)
 
     fun getSpeech(decision: Decision): SpeechletResponse {
         val title = "Bester Fahrzeugtyp"
@@ -18,6 +21,7 @@ class Speech(){
         val vehicleSpeech = getVehicleSpeech(decision)
         val rainIntensitySpeech = getIntensitySpeech(decision)
         val speechText = "Fahre mit einem $vehicleSpeech weil es $rainIntensitySpeech regnen wird."
+        println(speechText)//TODO: LOG!
 
         // Create the Simple card content.
         val card = SimpleCard()

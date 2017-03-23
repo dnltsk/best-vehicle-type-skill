@@ -11,11 +11,11 @@ A possible answer will be
 
 ## build
 
-`mvn assembly:assembly -DdescriptorId=jar-with-dependencies -DskipTests=true package`
+`mvn clean package`
 
 ## start
 
-`java -jar target/best-vehicle-type-skill-jar-with-dependencies.jar Berlin` (not working yet)
+`export OWM_API_KEY=YOUR_OPEN_WEATHER_MAP_API_KEY && java -jar target/best-vehicle-type-skill-jar-with-dependencies.jar Reading,UK`
 
 ## references
 

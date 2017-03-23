@@ -1,11 +1,13 @@
 package org.dnltsk.bestvehicletypeskill.decision
 
+import com.google.inject.Singleton
 import net.aksingh.owmjapis.HourlyForecast
 import org.dnltsk.bestvehicletypeskill.model.Decision
 import org.dnltsk.bestvehicletypeskill.model.RainType
 import org.dnltsk.bestvehicletypeskill.model.RainType.*
 import org.dnltsk.bestvehicletypeskill.model.VehicleType.*
 
+@Singleton
 class VehicleTypeRuleset {
 
     fun findBestVehicleType(weather: HourlyForecast): Decision {

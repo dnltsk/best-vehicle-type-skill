@@ -13,10 +13,8 @@
 package org.dnltsk.bestvehicletypeskill
 
 import com.amazon.speech.speechlet.lambda.SpeechletRequestStreamHandler
-import org.dnltsk.bestvehicletypeskill.decision.OpenWeatherMapClient
-import org.dnltsk.bestvehicletypeskill.decision.Speech
-import org.dnltsk.bestvehicletypeskill.decision.VehicleTypeRuleset
-import java.util.*
+import com.google.common.collect.ImmutableSet
+import com.google.inject.Guice
 
 /**
  * This class could be the handler for an AWS Lambda function powering an Alexa Skills Kit
@@ -25,20 +23,13 @@ import java.util.*
  * this project using the `lambda-compile` Ant task and upload the resulting zip file to power
  * your function.
  */
-class SpeechletHandler : SpeechletRequestStreamHandler(
-        Speechlet(
-                OpenWeatherMapClient(),
-                VehicleTypeRuleset(),
-                Speech()
-        ),
-        SpeechletHandler.supportedApplicationIds) {
+class SkillSpeechletHandler : SpeechletRequestStreamHandler(
+        Guice.createInjector(SkillSpeechletModule()).getInstance(SkillSpeechlet::class.java),
+        supportedApplicationIds
+) {
 
     companion object {
-        private val supportedApplicationIds = HashSet<String>()
-
-        init {
-            supportedApplicationIds.add("amzn1.ask.skill.f69bb9f8-992f-4b47-8994-8ea4297cfedd")
-        }
+        private val supportedApplicationIds = ImmutableSet.of("amzn1.ask.skill.f69bb9f8-992f-4b47-8994-8ea4297cfedd")
     }
 
 }

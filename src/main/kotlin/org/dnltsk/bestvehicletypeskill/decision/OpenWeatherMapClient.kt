@@ -1,9 +1,11 @@
 package org.dnltsk.bestvehicletypeskill.decision
 
+import com.google.inject.Singleton
 import net.aksingh.owmjapis.HourlyForecast
 import net.aksingh.owmjapis.OpenWeatherMap
 import org.slf4j.LoggerFactory
 
+@Singleton
 class OpenWeatherMapClient() {
 
     private val LOG = LoggerFactory.getLogger(this::class.java)

@@ -4,22 +4,26 @@ import com.amazon.speech.speechlet.*
 import com.amazon.speech.ui.PlainTextOutputSpeech
 import com.amazon.speech.ui.Reprompt
 import com.amazon.speech.ui.SimpleCard
+import com.google.inject.Inject
+import com.google.inject.Singleton
 import org.dnltsk.bestvehicletypeskill.decision.OpenWeatherMapClient
 import org.dnltsk.bestvehicletypeskill.decision.Speech
 import org.dnltsk.bestvehicletypeskill.decision.VehicleTypeRuleset
 import org.slf4j.LoggerFactory
 
-class Speechlet constructor(
+@Singleton
+class SkillSpeechlet @Inject constructor(
         private val openWeatherMapClient: OpenWeatherMapClient,
         private val vehicleTypeRuleset: VehicleTypeRuleset,
         private val speech: Speech
-) : com.amazon.speech.speechlet.Speechlet {
+) : Speechlet {
 
     private val LOG = LoggerFactory.getLogger(this::class.java)
 
     private val CITY_NAME_SLOT_NAME = "cityName"
 
     override fun onSessionStarted(request: SessionStartedRequest, session: Session) {
+
         LOG.info("onSessionStarted: $request, $session")
     }
 
