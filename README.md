@@ -3,10 +3,10 @@
 Alexa Skill to answer a question like "Womit fahre ich am besten nach {cityName}?".
 A possible answer will be
 
-* Fahre mit einem **Auto** weil es **extrem** regnen wird.
-* Fahre mit einem **Auto** weil es **moderat** regnen wird.
-* Fahre mit einem **Bus** weil es **leicht** regnen wird.
-* Fahre mit einem **Fahrrad** weil es **nicht** regnen wird.
+* Fahre mit dem **Auto** weil es **extrem** regnen wird.
+* Fahre mit dem **Auto** weil es **moderat** regnen wird.
+* Fahre mit dem **Bus** weil es **leicht** regnen wird.
+* Fahre mit dem **Fahrrad** weil es **nicht** regnen wird.
 
 
 ## build

@@ -1,11 +1,12 @@
 package org.dnltsk.bestvehicletypeskill
 
+import com.amazon.speech.slu.Intent
 import com.amazon.speech.speechlet.*
 import com.amazon.speech.ui.PlainTextOutputSpeech
-import com.amazon.speech.ui.Reprompt
 import com.amazon.speech.ui.SimpleCard
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.dnltsk.bestvehicletypeskill.buildins.HelpIntentSpeech
 import org.dnltsk.bestvehicletypeskill.decision.OpenWeatherMapClient
 import org.dnltsk.bestvehicletypeskill.decision.Speech
 import org.dnltsk.bestvehicletypeskill.decision.VehicleTypeRuleset
@@ -15,7 +16,8 @@ import org.slf4j.LoggerFactory
 class SkillSpeechlet @Inject constructor(
         private val openWeatherMapClient: OpenWeatherMapClient,
         private val vehicleTypeRuleset: VehicleTypeRuleset,
-        private val speech: Speech
+        private val speech: Speech,
+        private val helpIntentSpeech: HelpIntentSpeech
 ) : Speechlet {
 
     private val LOG = LoggerFactory.getLogger(this::class.java)
@@ -23,7 +25,6 @@ class SkillSpeechlet @Inject constructor(
     private val CITY_NAME_SLOT_NAME = "cityName"
 
     override fun onSessionStarted(request: SessionStartedRequest, session: Session) {
-
         LOG.info("onSessionStarted: $request, $session")
     }
 
@@ -38,13 +39,23 @@ class SkillSpeechlet @Inject constructor(
 
     override fun onIntent(request: IntentRequest, session: Session): SpeechletResponse {
         LOG.info("onIntent: $request, $session")
-        val cityNameSlot = request.intent.getSlot(CITY_NAME_SLOT_NAME)
-        LOG.info("cityNameSlot: $cityNameSlot")
-        val cityName = cityNameSlot.value
-        return handleIntent(cityName)
+        val intent = request.intent
+        val intentName = intent.getName()
+        LOG.info("onIntent() intentName: $intentName")
+        when(intentName){
+            "FindBestVehicleType" -> return handleFindBestVehicleTypeIntent(intent)
+            "AMAZON.HelpIntent" -> return helpIntentSpeech.getHelpSpeech()
+            else -> return helpIntentSpeech.getHelpSpeech()
+        }
     }
 
-    fun handleIntent(cityName: String): SpeechletResponse {
+    fun handleFindBestVehicleTypeIntent(intent: Intent): SpeechletResponse {
+        val cityNameSlot = intent.getSlot(CITY_NAME_SLOT_NAME)
+        LOG.info("cityNameSlot: ${cityNameSlot.value}")
+        val cityName = cityNameSlot.value
+        if(cityName == null){
+            return helpIntentSpeech.getHelpSpeech()
+        }
         val weather = openWeatherMapClient.loadHourlyForecast(cityName)
         val decision = vehicleTypeRuleset.findBestVehicleType(weather)
         return speech.getSpeech(decision)
@@ -61,15 +72,14 @@ class SkillSpeechlet @Inject constructor(
      */
     private val welcomeResponse: SpeechletResponse
         get() {
-            val speechText = "Willkommen zum Besten Fahrzeugtyp Skill"
+
             val card = SimpleCard()
             card.title = "Bester Fahrzeugtyp"
+            val speechText = "Willkommen zum Besten Fahrzeugtyp Skill"
             card.content = speechText
             val speech = PlainTextOutputSpeech()
             speech.text = speechText
-            val reprompt = Reprompt()
-            reprompt.outputSpeech = speech
-            return SpeechletResponse.newAskResponse(speech, reprompt, card)
+            return SpeechletResponse.newTellResponse(speech, card)
         }
 
 }

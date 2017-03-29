@@ -2,7 +2,6 @@ package org.dnltsk.bestvehicletypeskill.decision
 
 import com.amazon.speech.speechlet.SpeechletResponse
 import com.amazon.speech.ui.PlainTextOutputSpeech
-import com.amazon.speech.ui.Reprompt
 import com.amazon.speech.ui.SimpleCard
 import com.google.inject.Singleton
 import org.dnltsk.bestvehicletypeskill.model.Decision
@@ -20,8 +19,8 @@ class Speech(){
 
         val vehicleSpeech = getVehicleSpeech(decision)
         val rainIntensitySpeech = getIntensitySpeech(decision)
-        val speechText = "Fahre mit einem $vehicleSpeech weil es $rainIntensitySpeech regnen wird."
-        println(speechText)//TODO: LOG!
+        val speechText = "Fahre mit dem $vehicleSpeech weil es $rainIntensitySpeech regnen wird."
+        LOG.info(speechText)
 
         // Create the Simple card content.
         val card = SimpleCard()
@@ -32,11 +31,7 @@ class Speech(){
         val speech = PlainTextOutputSpeech()
         speech.text = speechText
 
-        // Create reprompt
-        val reprompt = Reprompt()
-        reprompt.outputSpeech = speech
-
-        return SpeechletResponse.newAskResponse(speech, reprompt, card)
+        return SpeechletResponse.newTellResponse(speech, card)
     }
 
     private fun getVehicleSpeech(decision: Decision): String {
